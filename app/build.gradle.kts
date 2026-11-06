@@ -10,12 +10,12 @@ plugins {
 
 android {
     namespace = "com.alonso.darkline.terminal"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.alonso.darkline.terminal"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0.0"
 
@@ -74,7 +74,6 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:okhttp-sse:4.12.0")
 
-    // Code editor (Sora Editor / Rosemoe) - Updated to latest stable version
     implementation(platform("io.github.rosemoe:editor-bom:0.24.4"))
     implementation("io.github.rosemoe:editor")
     implementation("io.github.rosemoe:language-textmate")
