@@ -52,7 +52,7 @@
 
 - Android Studio (recent) or command-line tools
 - JDK 17
-- Android SDK 35
+- Android SDK 34
 
 ### Steps
 
