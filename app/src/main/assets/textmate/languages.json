@@ -1,0 +1,16 @@
+{
+  "languages": [
+    {
+      "grammar": "textmate/shell/syntaxes/shellscript.tmLanguage.json",
+      "name": "shell",
+      "scopeName": "source.shell",
+      "languageConfiguration": "textmate/shell/language-configuration.json"
+    },
+    {
+      "grammar": "textmate/text/syntaxes/text.tmLanguage.json",
+      "name": "text",
+      "scopeName": "source.text",
+      "languageConfiguration": "textmate/text/language-configuration.json"
+    }
+  ]
+}

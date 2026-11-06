@@ -1,0 +1,241 @@
+<androidx.drawerlayout.widget.DrawerLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/drawer"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:openDrawer="start">
+
+	<androidx.coordinatorlayout.widget.CoordinatorLayout
+		android:id="@+id/coordinator"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<com.google.android.material.appbar.AppBarLayout
+			android:id="@+id/appBar"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:elevation="0dp">
+
+			<com.google.android.material.appbar.MaterialToolbar
+				android:id="@+id/toolbar"
+				android:layout_width="match_parent"
+				android:layout_height="?attr/actionBarSize"
+				app:navigationIcon="@drawable/ic_menu_24"
+				app:title="Terminal"
+				android:textColor="?colorOnSurface" />
+		</com.google.android.material.appbar.AppBarLayout>
+
+		<LinearLayout
+			android:id="@+id/mainContainer"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+			<com.termux.view.TerminalView
+				android:id="@+id/terminalView"
+				android:layout_width="match_parent"
+				android:layout_height="0dp"
+				android:layout_weight="1"
+				android:focusableInTouchMode="true"
+				android:focusable="true"
+				android:background="#000000"/>
+
+			<LinearLayout
+				android:id="@+id/extraKeysContainer"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:paddingVertical="6dp"
+				android:paddingHorizontal="4dp">
+
+				<LinearLayout
+					android:id="@+id/row1"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:background="@android:color/transparent"
+					android:gravity="center"
+					android:orientation="horizontal">
+
+					<com.google.android.material.button.MaterialButton
+						android:id="@+id/keyEsc"
+						style="@style/Widget.Material3.Button.TextButton"
+						android:layout_width="0dp"
+						android:layout_height="40dp"
+						android:layout_marginEnd="4dp"
+						android:layout_weight="1"
+						android:insetTop="0dp"
+						android:insetBottom="0dp"
+						android:text="ESC"
+						android:textColor="?colorOnSurfaceVariant"
+						android:textSize="11sp"
+						app:cornerRadius="10dp" />
+
+					<com.google.android.material.button.MaterialButton
+						android:id="@+id/keyTab"
+						style="@style/Widget.Material3.Button.TextButton"
+						android:layout_width="0dp"
+						android:layout_height="40dp"
+						android:layout_marginEnd="4dp"
+						android:layout_weight="1"
+						android:insetTop="0dp"
+						android:insetBottom="0dp"
+						android:text="TAB"
+						android:textColor="?colorOnSurfaceVariant"
+						android:textSize="11sp"
+						app:cornerRadius="10dp" />
+
+					<com.google.android.material.button.MaterialButton
+						android:id="@+id/keyUp"
+						style="@style/Widget.Material3.Button.TextButton"
+						android:layout_width="0dp"
+						android:layout_height="40dp"
+						android:layout_marginEnd="4dp"
+						android:layout_weight="1"
+						android:insetTop="0dp"
+						android:insetBottom="0dp"
+						android:text="^"
+						android:textColor="?colorOnSurfaceVariant"
+						android:textSize="16sp"
+						app:cornerRadius="10dp" />
+
+					<com.google.android.material.button.MaterialButton
+						android:id="@+id/keyCtrl"
+						style="@style/Widget.Material3.Button.TextButton"
+						android:layout_width="0dp"
+						android:layout_height="40dp"
+						android:layout_marginEnd="4dp"
+						android:layout_weight="1"
+						android:insetTop="0dp"
+						android:insetBottom="0dp"
+						android:text="CTRL"
+						android:textColor="?colorOnSurfaceVariant"
+						android:textSize="11sp"
+						app:cornerRadius="10dp" />
+
+					<com.google.android.material.button.MaterialButton
+						android:id="@+id/keyAlt"
+						style="@style/Widget.Material3.Button.TextButton"
+						android:layout_width="0dp"
+						android:layout_height="40dp"
+						android:layout_weight="1"
+						android:insetTop="0dp"
+						android:insetBottom="0dp"
+						android:text="ALT"
+						android:textColor="?colorOnSurfaceVariant"
+						android:textSize="11sp"
+						app:cornerRadius="10dp" />
+				</LinearLayout>
+
+				<LinearLayout
+					android:id="@+id/row2"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="4dp"
+					android:background="@android:color/transparent"
+					android:gravity="center"
+					android:orientation="horizontal">
+
+					<com.google.android.material.button.MaterialButton
+						android:id="@+id/keyAnd"
+						style="@style/Widget.Material3.Button.TextButton"
+						android:layout_width="0dp"
+						android:layout_height="40dp"
+						android:layout_marginEnd="4dp"
+						android:layout_weight="1"
+						android:insetTop="0dp"
+						android:insetBottom="0dp"
+						android:text="&amp;"
+						android:textColor="?colorOnSurfaceVariant"
+						android:textSize="11sp"
+						app:cornerRadius="10dp" />
+
+					<com.google.android.material.button.MaterialButton
+						android:id="@+id/keyLeft"
+						style="@style/Widget.Material3.Button.TextButton"
+						android:layout_width="0dp"
+						android:layout_height="40dp"
+						android:layout_marginEnd="4dp"
+						android:layout_weight="1"
+						android:insetTop="0dp"
+						android:insetBottom="0dp"
+						android:rotation="180"
+						android:text="&gt;"
+						android:textColor="?colorOnSurfaceVariant"
+						android:textSize="16sp"
+						app:cornerRadius="10dp" />
+
+					<com.google.android.material.button.MaterialButton
+						android:id="@+id/keyDown"
+						style="@style/Widget.Material3.Button.TextButton"
+						android:layout_width="0dp"
+						android:layout_height="40dp"
+						android:layout_marginEnd="4dp"
+						android:layout_weight="1"
+						android:insetTop="0dp"
+						android:insetBottom="0dp"
+						android:rotation="180"
+						android:text="^"
+						android:textColor="?colorOnSurfaceVariant"
+						android:textSize="16sp"
+						app:cornerRadius="10dp" />
+
+					<com.google.android.material.button.MaterialButton
+						android:id="@+id/keyRight"
+						style="@style/Widget.Material3.Button.TextButton"
+						android:layout_width="0dp"
+						android:layout_height="40dp"
+						android:layout_marginEnd="4dp"
+						android:layout_weight="1"
+						android:insetTop="0dp"
+						android:insetBottom="0dp"
+						android:rotation="180"
+						android:text="&lt;"
+						android:textColor="?colorOnSurfaceVariant"
+						android:textSize="16sp"
+						app:cornerRadius="10dp" />
+
+					<com.google.android.material.button.MaterialButton
+						android:id="@+id/keySlash"
+						style="@style/Widget.Material3.Button.TextButton"
+						android:layout_width="0dp"
+						android:layout_height="40dp"
+						android:layout_weight="1"
+						android:insetTop="0dp"
+						android:insetBottom="0dp"
+						android:text="/"
+						android:textColor="?colorOnSurfaceVariant"
+						android:textSize="14sp"
+						app:cornerRadius="10dp" />
+				</LinearLayout>
+			</LinearLayout>
+		</LinearLayout>
+	</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+	<LinearLayout
+		android:id="@+id/sessionPanel"
+		android:layout_width="320dp"
+		android:layout_height="match_parent"
+		android:layout_gravity="start"
+		android:background="@drawable/drawer_background">
+
+		<include
+			android:id="@+id/Drawer"
+			layout="@layout/drawer_terminal" />
+	</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/aiPanel"
+		android:layout_width="360dp"
+		android:layout_height="match_parent"
+		android:layout_gravity="end"
+		android:background="?android:attr/colorBackground"
+		android:orientation="vertical">
+
+		<include
+			android:id="@+id/AiDrawer"
+			layout="@layout/drawer_ai" />
+	</LinearLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

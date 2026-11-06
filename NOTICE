@@ -1,0 +1,35 @@
+D.L.T (DarkLine Terminal)
+Copyright (c) 2024-2026 The D.L.T Authors
+
+This project is licensed under the Mozilla Public License 2.0 (MPL-2.0).
+See the LICENSE file for the full license text.
+
+---------------------------------------------------------------------
+Third-Party Components
+---------------------------------------------------------------------
+
+1. terminal-emulator and terminal-view
+   Origin: Termux (https://github.com/termux/termux-app)
+   Derived from: Jackpal's Android Terminal Emulator
+   License: Apache License 2.0
+   Note: These two modules are an explicit exception in Termux's LICENSE.md
+         and are licensed under Apache-2.0. The rest of termux-app (GPLv3)
+         is NOT included in this project.
+
+2. Sora Editor (io.github.rosemoe:editor and language-textmate)
+   Copyright (C) 2020-2026 Rosemoe
+   License: GNU Lesser General Public License v2.1 or later (LGPL-2.1+)
+   Homepage: https://github.com/Rosemoe/sora-editor
+
+3. proot (prebuilt native libraries: libproot.so and related loaders)
+   Origin: PRoot project + Termux patches
+   License: GNU General Public License (see upstream proot for exact version)
+   Note: Distributed as prebuilt shared libraries.
+
+4. Other libraries
+   - AndroidX, Material Components, OkHttp, Gson, UtilCodeX, etc.
+   - Licensed under Apache License 2.0 (or their respective permissive licenses)
+
+All third-party licenses are respected. When redistributing this software,
+you must retain the above notices and comply with the terms of each
+component's license.

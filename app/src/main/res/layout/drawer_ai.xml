@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<LinearLayout
+		android:id="@+id/aiHeader"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center_vertical"
+		android:orientation="horizontal"
+		android:paddingHorizontal="8dp"
+		android:paddingVertical="8dp">
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/btnAiBack"
+			style="@style/Widget.Material3.Button.IconButton"
+			android:layout_width="48dp"
+			android:layout_height="48dp"
+			app:icon="@drawable/ic_arrow_back_24" />
+
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:orientation="vertical"
+			android:paddingHorizontal="8dp">
+
+			<TextView
+				android:id="@+id/txtAiTitle"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:ellipsize="end"
+				android:maxLines="1"
+				android:text="AI Assistant"
+				android:textColor="?colorOnSurface"
+				android:textSize="16sp"
+				android:textStyle="bold" />
+
+			<TextView
+				android:id="@+id/txtAiSubtitle"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:ellipsize="end"
+				android:maxLines="1"
+				android:text="DeepSeek"
+				android:textColor="?colorOnSurfaceVariant"
+				android:textSize="12sp" />
+		</LinearLayout>
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/btnAiNewChat"
+			style="@style/Widget.Material3.Button.IconButton"
+			android:layout_width="48dp"
+			android:layout_height="48dp"
+			app:icon="@drawable/ic_add_24" />
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/btnAiHistory"
+			style="@style/Widget.Material3.Button.IconButton"
+			android:layout_width="48dp"
+			android:layout_height="48dp"
+			app:icon="@drawable/ic_history_24" />
+	</LinearLayout>
+
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1">
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/recyclerAiMessages"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:clipToPadding="false"
+			android:paddingHorizontal="8dp"
+			android:paddingVertical="8dp" />
+
+		<LinearLayout
+			android:id="@+id/layoutEmptyState"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:gravity="center"
+			android:orientation="vertical"
+			android:padding="24dp"
+			android:visibility="gone">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Start a conversation"
+				android:textColor="?colorOnSurface"
+				android:textSize="18sp"
+				android:textStyle="bold" />
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="8dp"
+				android:gravity="center"
+				android:text="Ask me anything about Linux, code, or system commands."
+				android:textColor="?colorOnSurfaceVariant"
+				android:textSize="14sp" />
+		</LinearLayout>
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/recyclerAiConversations"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="?colorSurfaceContainer"
+			android:clipToPadding="false"
+			android:paddingHorizontal="8dp"
+			android:paddingVertical="8dp"
+			android:visibility="gone" />
+	</FrameLayout>
+
+	<LinearLayout
+		android:id="@+id/aiInputContainer"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="?colorSurfaceContainerHigh"
+		android:gravity="center_vertical"
+		android:orientation="horizontal"
+		android:paddingHorizontal="8dp"
+		android:paddingVertical="8dp">
+
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/aiInputLayout"
+			style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			app:boxBackgroundMode="none"
+			app:hintEnabled="false">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/aiInput"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="Type a message..."
+				android:inputType="textMultiLine|textCapSentences"
+				android:maxLines="5"
+				android:minHeight="40dp"
+				android:textSize="14sp" />
+		</com.google.android.material.textfield.TextInputLayout>
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/btnAiSend"
+			style="@style/Widget.Material3.Button.IconButton.Filled"
+			android:layout_width="48dp"
+			android:layout_height="48dp"
+			android:layout_marginStart="4dp"
+			app:icon="@drawable/ic_send_24" />
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/btnAiStop"
+			style="@style/Widget.Material3.Button.IconButton.Filled"
+			android:layout_width="48dp"
+			android:layout_height="48dp"
+			android:layout_marginStart="4dp"
+			android:visibility="gone"
+			app:icon="@drawable/ic_stop_24" />
+	</LinearLayout>
+</LinearLayout>

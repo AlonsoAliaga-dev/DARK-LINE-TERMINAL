@@ -1,0 +1,12 @@
+{
+  "information_for_contributors": [
+    "This is a minimal grammar for plain text files.",
+    "It applies NO syntax highlighting whatsoever.",
+    "All text appears with the default editor background and foreground colors."
+  ],
+  "version": "1.0.0",
+  "name": "text",
+  "scopeName": "source.text",
+  "patterns": [],
+  "repository": {}
+}
