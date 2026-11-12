@@ -93,7 +93,7 @@ public final class LinuxCommandRunner {
 
     cmd.add("-w");
     cmd.add("/");
-    cmd.add("/system/bin/sh");
+    cmd.add("/bin/sh");
     cmd.add("-c");
     cmd.add(command);
 
