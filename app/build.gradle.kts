@@ -16,8 +16,8 @@ android {
         applicationId = "com.alonso.darkline.terminal"
         minSdk = 26
         targetSdk = 34
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = 3
+        versionName = "1.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -79,4 +79,7 @@ dependencies {
     implementation("io.github.rosemoe:language-textmate")
 
     implementation("com.blankj:utilcodex:1.31.1")
+
+    implementation("io.noties.markwon:core:4.6.2")
+    implementation("io.noties.markwon:ext-tables:4.6.2")
 }
