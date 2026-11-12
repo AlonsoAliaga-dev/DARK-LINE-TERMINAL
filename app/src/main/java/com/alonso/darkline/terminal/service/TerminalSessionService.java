@@ -42,6 +42,10 @@ public class TerminalSessionService extends Service {
   private static final int NOTIFICATION_ID = 4821;
   private static final long AUTO_CLOSE_CHECK_INTERVAL_MS = 30_000L;
 
+  public static final String ACTION_NEW_SESSION = "com.alonso.darkline.terminal.ACTION_NEW_SESSION";
+  public static final String ACTION_STOP_ALL = "com.alonso.darkline.terminal.ACTION_STOP_ALL";
+  public static final String ACTION_AI_CHAT = "com.alonso.darkline.terminal.ACTION_AI_CHAT";
+
   public interface SessionListener {
     void onTextChanged(TerminalSession session);
 
@@ -110,6 +114,39 @@ public class TerminalSessionService extends Service {
     distroManager = new DistroManager(this);
     createNotificationChannel();
     autoCloseHandler.postDelayed(autoCloseRunnable, AUTO_CLOSE_CHECK_INTERVAL_MS);
+  }
+
+  @Override
+  public int onStartCommand(Intent intent, int flags, int startId) {
+    if (intent != null && intent.getAction() != null) {
+      String action = intent.getAction();
+      switch (action) {
+        case ACTION_NEW_SESSION:
+          if (isDistroInstalled()) {
+            try {
+              createLinuxSession();
+            } catch (Exception e) {
+              createSession(null);
+            }
+          } else {
+            createSession(null);
+          }
+          break;
+        case ACTION_STOP_ALL:
+          List<SessionItem> toClose = new ArrayList<>(sessions);
+          for (SessionItem item : toClose) {
+            removeSession(item.session);
+          }
+          break;
+        case ACTION_AI_CHAT:
+          Intent openApp = new Intent(this, TerminalActivity.class);
+          openApp.putExtra(TerminalActivity.EXTRA_OPEN_AI, true);
+          openApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+          startActivity(openApp);
+          break;
+      }
+    }
+    return START_STICKY;
   }
 
   @Nullable
@@ -232,6 +269,22 @@ public class TerminalSessionService extends Service {
         | (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0);
     PendingIntent contentIntent = PendingIntent.getActivity(this, 0, openIntent, flags);
 
+    Intent newSessionIntent = new Intent(this, TerminalSessionService.class);
+    newSessionIntent.setAction(ACTION_NEW_SESSION);
+    PendingIntent newSessionPi = PendingIntent.getService(this, 1,
+        newSessionIntent, flags);
+
+    Intent stopAllIntent = new Intent(this, TerminalSessionService.class);
+    stopAllIntent.setAction(ACTION_STOP_ALL);
+    PendingIntent stopAllPi = PendingIntent.getService(this, 2,
+        stopAllIntent, flags);
+
+    Intent aiIntent = new Intent(this, TerminalActivity.class);
+    aiIntent.putExtra(TerminalActivity.EXTRA_OPEN_AI, true);
+    aiIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    PendingIntent aiPi = PendingIntent.getActivity(this, 3,
+        aiIntent, flags);
+
     int count = sessions.size();
     String text = count + (count == 1 ? " session running" : " sessions running");
 
@@ -241,6 +294,9 @@ public class TerminalSessionService extends Service {
         .setSmallIcon(R.drawable.app_icon_notification)
         .setOngoing(true)
         .setContentIntent(contentIntent)
+        .addAction(R.drawable.ic_add_24, "New Session", newSessionPi)
+        .addAction(R.drawable.ic_stop_24, "Stop All", stopAllPi)
+        .addAction(R.drawable.ic_ai_24, "AI Chat", aiPi)
         .build();
   }
 

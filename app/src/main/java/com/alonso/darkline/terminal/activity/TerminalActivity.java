@@ -76,6 +76,7 @@ public class TerminalActivity extends AppCompatActivity
 
   public static final String EXTRA_WORKING_DIR = "working_dir";
   public static final String EXTRA_COMMAND = "command";
+  public static final String EXTRA_OPEN_AI = "open_ai";
 
   private ActivityTerminalBinding binding;
 
@@ -200,6 +201,15 @@ public class TerminalActivity extends AppCompatActivity
     aiPanelView = findViewById(R.id.aiPanel);
     aiPanelController = new AiPanelController(this, drawerLayout, aiPanelView);
 
+    if (getIntent().getBooleanExtra(EXTRA_OPEN_AI, false)) {
+      mainHandler.postDelayed(() -> {
+        if (aiPanelController != null) {
+          aiPanelController.openPanel();
+        }
+        getIntent().removeExtra(EXTRA_OPEN_AI);
+      }, 500);
+    }
+
     terminalView.setTerminalViewClient(new DarkLineViewClient(terminalView, this));
 
     applyExtraKeysVisibility();
@@ -222,7 +232,7 @@ public class TerminalActivity extends AppCompatActivity
       altToggled = !altToggled;
       keyAlt.setTextColor(altToggled ? Color.RED : defaultKeyTextColor);
     });
-    
+
     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
     getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -233,7 +243,7 @@ public class TerminalActivity extends AppCompatActivity
             && fileManagerFragment.onBackPressed()) {
           return;
         }
-        
+
         if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
           drawerLayout.closeDrawer(GravityCompat.END);
         } else if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -261,6 +271,19 @@ public class TerminalActivity extends AppCompatActivity
     }
   }
 
+  @Override
+  protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    setIntent(intent);
+
+    if (intent != null && intent.getBooleanExtra(EXTRA_OPEN_AI, false)) {
+      if (aiPanelController != null) {
+        aiPanelController.openPanel();
+      }
+      intent.removeExtra(EXTRA_OPEN_AI);
+    }
+  }
+
   private void setupDrawerPager() {
     drawerViewPager = drawerBinding.drawerViewPager;
     drawerTabs = drawerBinding.drawerTabs;
@@ -272,7 +295,7 @@ public class TerminalActivity extends AppCompatActivity
 
     pagerAdapter = new SessionPagerAdapter(this, sessionListFragment, fileManagerFragment);
     drawerViewPager.setAdapter(pagerAdapter);
-    
+
     drawerViewPager.setUserInputEnabled(false);
 
     new TabLayoutMediator(drawerTabs, drawerViewPager,
@@ -718,8 +741,6 @@ public class TerminalActivity extends AppCompatActivity
     }
     super.onDestroy();
   }
-
-  // =============== SessionListFragment.Callback ===============
 
   @Override
   public TerminalSessionService getService() {
