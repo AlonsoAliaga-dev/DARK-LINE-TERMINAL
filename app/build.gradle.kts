@@ -16,7 +16,7 @@ android {
         applicationId = "com.alonso.darkline.terminal"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1.1
+        versionCode = 2
         versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
