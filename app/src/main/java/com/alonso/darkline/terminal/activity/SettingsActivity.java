@@ -23,12 +23,25 @@ import com.alonso.darkline.terminal.settings.SettingsKeys;
 import com.alonso.darkline.terminal.settings.SettingsManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class SettingsActivity extends AppCompatActivity {
+
+  private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
   private ActivitySettingsBinding binding;
   private SettingsManager settings;
@@ -195,6 +208,12 @@ public class SettingsActivity extends AppCompatActivity {
   private void setupAiSection() {
     binding.inputGroqKey.setText(settings.getGroqKey());
     binding.inputGroqModel.setText(settings.getGroqModel());
+
+    binding.inputCustomBaseUrl.setText(settings.getCustomBaseUrl());
+    binding.inputCustomApiKey.setText(settings.getCustomApiKey());
+    binding.inputCustomModel.setText(settings.getCustomModel());
+
+    binding.btnTestAiConnection.setOnClickListener(v -> testAiConnection());
   }
 
   private void saveAiFields() {
@@ -205,6 +224,84 @@ public class SettingsActivity extends AppCompatActivity {
       binding.inputGroqModel.setText(model);
     }
     settings.setGroqModel(model);
+
+    settings.setCustomBaseUrl(text(binding.inputCustomBaseUrl));
+    settings.setCustomApiKey(text(binding.inputCustomApiKey));
+    settings.setCustomModel(text(binding.inputCustomModel));
+  }
+
+  private void testAiConnection() {
+    saveAiFields();
+
+    String baseUrl = settings.getActiveBaseUrl();
+    if (baseUrl.endsWith("/")) {
+      baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+    }
+    String url = baseUrl + "/chat/completions";
+
+    String apiKey = settings.getActiveApiKey();
+    String model = settings.getActiveModel();
+
+    if (model == null || model.trim().isEmpty()) {
+      snack("Model is empty");
+      return;
+    }
+
+    JsonObject body = new JsonObject();
+    body.addProperty("model", model.trim());
+    JsonArray messages = new JsonArray();
+    JsonObject userMsg = new JsonObject();
+    userMsg.addProperty("role", "user");
+    userMsg.addProperty("content", "ping");
+    messages.add(userMsg);
+    body.add("messages", messages);
+    body.addProperty("max_tokens", 5);
+
+    Request.Builder reqBuilder = new Request.Builder()
+        .url(url)
+        .addHeader("Content-Type", "application/json")
+        .post(RequestBody.create(body.toString(), JSON));
+
+    if (apiKey != null && !apiKey.trim().isEmpty()) {
+      reqBuilder.addHeader("Authorization", "Bearer " + apiKey.trim());
+    }
+
+    OkHttpClient client = new OkHttpClient.Builder()
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .build();
+
+    snack("Testing connection...");
+
+    client.newCall(reqBuilder.build()).enqueue(new Callback() {
+      @Override
+      public void onFailure(Call call, java.io.IOException e) {
+        runOnUiThread(() -> snack("Connection failed: " + e.getMessage()));
+      }
+
+      @Override
+      public void onResponse(Call call, Response response) {
+        int code = response.code();
+        String bodyText = "";
+        try {
+          if (response.body() != null) {
+            bodyText = response.body().string();
+            if (bodyText.length() > 150) bodyText = bodyText.substring(0, 150);
+          }
+        } catch (Exception ignored) {
+        }
+        response.close();
+
+        final String finalBody = bodyText;
+        runOnUiThread(() -> {
+          if (code >= 200 && code < 300) {
+            snack("Connection OK (" + code + ")");
+          } else {
+            snack("HTTP " + code + ": " + finalBody);
+          }
+        });
+      }
+    });
   }
 
   private String text(EditText editText) {
@@ -212,6 +309,6 @@ public class SettingsActivity extends AppCompatActivity {
   }
 
   private void snack(String message) {
-    Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_SHORT).show();
+    Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).show();
   }
 }

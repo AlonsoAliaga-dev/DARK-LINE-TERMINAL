@@ -43,7 +43,6 @@ public class AiChatManager {
 
   private static final String TAG = "AiChatManager";
   private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
-  private static final String GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
   private static final String SYSTEM_PROMPT =
       "You are a helpful AI assistant inside a Linux terminal. "
@@ -141,11 +140,20 @@ public class AiChatManager {
   }
 
   public boolean isConfigured() {
-    String key = settings.getActiveApiKey();
+    if (settings.isUsingCustomEndpoint()) {
+      String baseUrl = settings.getActiveBaseUrl();
+      String model = settings.getActiveModel();
+      return baseUrl != null && !baseUrl.trim().isEmpty()
+          && model != null && !model.trim().isEmpty();
+    }
+    String key = settings.getGroqKey();
     return key != null && !key.trim().isEmpty();
   }
 
   public String getCurrentProviderLabel() {
+    if (settings.isUsingCustomEndpoint()) {
+      return "Custom";
+    }
     return "Groq";
   }
 
@@ -221,14 +229,28 @@ public class AiChatManager {
     currentConversation.messages.add(aiMsg);
     listener.onAssistantStarted(aiMsg);
 
-    String apiKey = settings.getActiveApiKey();
+    if (settings.isUsingCustomEndpoint()) {
+      String baseUrl = settings.getActiveBaseUrl();
+      String model = settings.getActiveModel();
 
-    if (apiKey == null || apiKey.trim().isEmpty()) {
-      listener.onError("Groq API key not configured. Open Settings → AI Assistant.");
-      return;
+      if (baseUrl == null || baseUrl.trim().isEmpty()) {
+        listener.onError("Custom Base URL is empty. Open Settings → AI Assistant.");
+        return;
+      }
+      if (model == null || model.trim().isEmpty()) {
+        listener.onError("Custom Model is empty. Open Settings → AI Assistant.");
+        return;
+      }
+    } else {
+      String apiKey = settings.getGroqKey();
+      if (apiKey == null || apiKey.trim().isEmpty()) {
+        listener.onError("Groq API key not configured. Open Settings → AI Assistant.");
+        return;
+      }
     }
 
-    sendGroqRequest(apiKey, aiMsg, listener);
+    String apiKey = settings.getActiveApiKey();
+    sendOpenAiCompatRequest(apiKey, aiMsg, listener);
   }
 
   public void cancelActiveRequest() {
@@ -255,26 +277,33 @@ public class AiChatManager {
     return arr;
   }
 
-  private void sendGroqRequest(String apiKey, AiMessage aiMsg, MessageListener listener) {
-    String model = settings.getGroqModel();
-    if (model == null || model.trim().isEmpty()) {
-      model = SettingsKeys.DEFAULT_GROQ_MODEL;
+  private void sendOpenAiCompatRequest(String apiKey, AiMessage aiMsg, MessageListener listener) {
+    String baseUrl = settings.getActiveBaseUrl();
+    baseUrl = baseUrl.trim();
+    if (baseUrl.endsWith("/")) {
+      baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
     }
-    model = model.trim();
+    String url = baseUrl + "/chat/completions";
+
+    String model = settings.getActiveModel().trim();
 
     JsonObject body = new JsonObject();
     body.addProperty("model", model);
     body.add("messages", buildMessages());
     body.addProperty("stream", true);
 
-    Log.d(TAG, "Groq request model: " + model);
+    Log.d(TAG, "AI request url=" + url + " model=" + model);
 
-    Request request = new Request.Builder()
-        .url(GROQ_URL)
-        .addHeader("Authorization", "Bearer " + apiKey)
+    Request.Builder reqBuilder = new Request.Builder()
+        .url(url)
         .addHeader("Content-Type", "application/json")
-        .post(RequestBody.create(body.toString(), JSON))
-        .build();
+        .post(RequestBody.create(body.toString(), JSON));
+
+    if (apiKey != null && !apiKey.trim().isEmpty()) {
+      reqBuilder.addHeader("Authorization", "Bearer " + apiKey.trim());
+    }
+
+    Request request = reqBuilder.build();
 
     activeCall = httpClient.newCall(request);
     activeCall.enqueue(new Callback() {
@@ -296,7 +325,7 @@ public class AiChatManager {
             }
           } catch (Exception ignored) {
           }
-          Log.e(TAG, "Groq error: " + err);
+          Log.e(TAG, "AI error: " + err);
           final String finalErr = err;
           mainHandler.post(() -> listener.onError(finalErr));
           response.close();

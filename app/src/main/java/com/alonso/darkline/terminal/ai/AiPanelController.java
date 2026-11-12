@@ -9,13 +9,7 @@ package com.alonso.darkline.terminal.ai;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.graphics.Typeface;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.BackgroundColorSpan;
-import android.text.style.StyleSpan;
-import android.text.style.TypefaceSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +29,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.noties.markwon.Markwon;
+import io.noties.markwon.ext.tables.TablePlugin;
+
 public class AiPanelController {
 
   private final Context context;
@@ -42,6 +39,7 @@ public class AiPanelController {
   private final View aiPanelView;
   private final DrawerAiBinding binding;
   private final AiChatManager chatManager;
+  private final Markwon markwon;
 
   private final List<AiChatManager.AiMessage> messages = new ArrayList<>();
   private MessageAdapter messageAdapter;
@@ -57,6 +55,10 @@ public class AiPanelController {
     this.aiPanelView = aiPanelView;
     this.binding = DrawerAiBinding.bind(aiPanelView);
     this.chatManager = new AiChatManager(context);
+
+    this.markwon = Markwon.builder(context)
+        .usePlugin(TablePlugin.create(context))
+        .build();
 
     setupRecyclerViews();
     setupInput();
@@ -286,7 +288,7 @@ public class AiPanelController {
         if (content.isEmpty()) {
           holder.binding.txtAiMessage.setText("...");
         } else {
-          holder.binding.txtAiMessage.setText(renderMarkdown(content));
+          markwon.setMarkdown(holder.binding.txtAiMessage, content);
         }
         holder.binding.btnCopy.setOnClickListener(v -> copyToClipboard(content));
       }
@@ -371,90 +373,5 @@ public class AiPanelController {
       cm.setPrimaryClip(ClipData.newPlainText("ai_message", text));
       Toast.makeText(context, "Copied", Toast.LENGTH_SHORT).show();
     }
-  }
-
-  // ============ رندرر ساده‌ی Markdown ============
-
-  private CharSequence renderMarkdown(String text) {
-    SpannableStringBuilder result = new SpannableStringBuilder();
-
-    int i = 0;
-    while (i < text.length()) {
-      // Code block
-      if (text.startsWith("```", i)) {
-        int end = text.indexOf("```", i + 3);
-        if (end == -1) {
-          result.append(text.substring(i));
-          break;
-        }
-        int firstNewline = text.indexOf('\n', i + 3);
-        String code;
-        if (firstNewline != -1 && firstNewline < end) {
-          code = text.substring(firstNewline + 1, end);
-        } else {
-          code = text.substring(i + 3, end);
-        }
-        int start = result.length();
-        result.append(code);
-        int stop = result.length();
-        if (stop > start) {
-          result.setSpan(new TypefaceSpan("monospace"), start, stop,
-              Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-          result.setSpan(new BackgroundColorSpan(0x22888888), start, stop,
-              Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        i = end + 3;
-        continue;
-      }
-
-      // Bold
-      if (text.startsWith("**", i)) {
-        int end = text.indexOf("**", i + 2);
-        if (end != -1) {
-          String content = text.substring(i + 2, end);
-          int start = result.length();
-          result.append(content);
-          result.setSpan(new StyleSpan(Typeface.BOLD), start, result.length(),
-              Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-          i = end + 2;
-          continue;
-        }
-      }
-
-      // Inline code
-      if (text.charAt(i) == '`') {
-        int end = text.indexOf('`', i + 1);
-        if (end != -1) {
-          String content = text.substring(i + 1, end);
-          int start = result.length();
-          result.append(content);
-          result.setSpan(new TypefaceSpan("monospace"), start, result.length(),
-              Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-          result.setSpan(new BackgroundColorSpan(0x22888888), start, result.length(),
-              Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-          i = end + 1;
-          continue;
-        }
-      }
-
-      // Italic
-      if (text.charAt(i) == '*') {
-        int end = text.indexOf('*', i + 1);
-        if (end != -1 && end > i + 1) {
-          String content = text.substring(i + 1, end);
-          int start = result.length();
-          result.append(content);
-          result.setSpan(new StyleSpan(Typeface.ITALIC), start, result.length(),
-              Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-          i = end + 1;
-          continue;
-        }
-      }
-
-      result.append(text.charAt(i));
-      i++;
-    }
-
-    return result;
   }
 }

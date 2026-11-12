@@ -112,12 +112,56 @@ public final class SettingsManager {
     prefs.edit().putString(SettingsKeys.AI_GROQ_MODEL, model).apply();
   }
 
+  public String getCustomBaseUrl() {
+    return prefs.getString(SettingsKeys.AI_CUSTOM_BASE_URL, "");
+  }
+
+  public void setCustomBaseUrl(String url) {
+    prefs.edit().putString(SettingsKeys.AI_CUSTOM_BASE_URL, url == null ? "" : url).apply();
+  }
+
+  public String getCustomApiKey() {
+    return prefs.getString(SettingsKeys.AI_CUSTOM_API_KEY, "");
+  }
+
+  public void setCustomApiKey(String key) {
+    prefs.edit().putString(SettingsKeys.AI_CUSTOM_API_KEY, key == null ? "" : key).apply();
+  }
+
+  public String getCustomModel() {
+    return prefs.getString(SettingsKeys.AI_CUSTOM_MODEL, "");
+  }
+
+  public void setCustomModel(String model) {
+    prefs.edit().putString(SettingsKeys.AI_CUSTOM_MODEL, model == null ? "" : model).apply();
+  }
+
+  public boolean isUsingCustomEndpoint() {
+    String baseUrl = getCustomBaseUrl();
+    return baseUrl != null && !baseUrl.trim().isEmpty();
+  }
+
   public String getActiveApiKey() {
+    if (isUsingCustomEndpoint()) {
+      String customKey = getCustomApiKey();
+      return customKey != null ? customKey.trim() : "";
+    }
     return getGroqKey();
   }
 
   public String getActiveModel() {
+    if (isUsingCustomEndpoint()) {
+      String customModel = getCustomModel();
+      return customModel != null ? customModel.trim() : "";
+    }
     return getGroqModel();
+  }
+
+  public String getActiveBaseUrl() {
+    if (isUsingCustomEndpoint()) {
+      return getCustomBaseUrl().trim();
+    }
+    return SettingsKeys.DEFAULT_BASE_URL;
   }
 
   public String getLoginShellOverride() {

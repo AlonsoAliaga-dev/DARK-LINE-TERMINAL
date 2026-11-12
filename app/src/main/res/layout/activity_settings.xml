@@ -226,10 +226,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="4dp"
-                android:text="AI Assistant (Groq)"
+                android:text="AI Assistant"
                 android:textColor="?colorPrimary"
                 android:textSize="13sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Default provider: Groq. To use a custom OpenAI-compatible API (OpenRouter, Ollama, LM Studio, ...), fill the Custom Endpoint fields below."
+                android:textColor="?colorOnSurfaceVariant"
+                android:textSize="12sp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/inputGroqKeyLayout"
@@ -254,8 +262,8 @@
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:hint="Model"
+                android:layout_marginBottom="16dp"
+                android:hint="Groq Model"
                 app:helperText="Example: openai/gpt-oss-20b">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -265,6 +273,92 @@
                     android:inputType="text"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="16dp"
+                android:background="?colorOutline"
+                android:alpha="0.2" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="Custom AI Endpoint (optional)"
+                android:textColor="?colorPrimary"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Any API compatible with OpenAI Chat Completions (OpenRouter, Ollama, LM Studio, vLLM, ...). If Base URL is set, it overrides Groq."
+                android:textColor="?colorOnSurfaceVariant"
+                android:textSize="12sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputCustomBaseUrlLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Base URL"
+                app:helperText="Example: https://openrouter.ai/api/v1">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputCustomBaseUrl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textUri"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputCustomApiKeyLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Custom API Key (optional)"
+                app:helperText="Leave empty if your endpoint does not require a key"
+                app:endIconMode="password_toggle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputCustomApiKey"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputCustomModelLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Custom Model"
+                app:helperText="Example: meta-llama/llama-3.3-70b-instruct">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputCustomModel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTestAiConnection"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="Test Connection"
+                app:icon="@drawable/ic_ai_24"
+                app:iconGravity="textStart" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

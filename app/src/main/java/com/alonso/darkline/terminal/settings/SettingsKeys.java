@@ -18,6 +18,10 @@ public final class SettingsKeys {
   public static final String AI_GROQ_KEY = "ai_groq_key";
   public static final String AI_GROQ_MODEL = "ai_groq_model";
 
+  public static final String AI_CUSTOM_BASE_URL = "ai_custom_base_url";
+  public static final String AI_CUSTOM_API_KEY = "ai_custom_api_key";
+  public static final String AI_CUSTOM_MODEL = "ai_custom_model";
+
   public static final String INSTALLED_DISTRO_ID = "installed_distro_id";
   public static final String INSTALLED_DISTRO_NAME = "installed_distro_name";
   public static final String INSTALLED_DISTRO_SHELL = "installed_distro_shell";
@@ -30,6 +34,7 @@ public final class SettingsKeys {
   public static final String DEFAULT_STARTUP_COMMAND = "";
   public static final int DEFAULT_AUTO_CLOSE_MINUTES = 0;
   public static final String DEFAULT_GROQ_MODEL = "openai/gpt-oss-20b";
+  public static final String DEFAULT_BASE_URL = "https://api.groq.com/openai/v1";
 
   private SettingsKeys() {
   }
