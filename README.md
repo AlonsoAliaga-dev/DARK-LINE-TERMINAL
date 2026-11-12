@@ -1,19 +1,21 @@
 # D.L.T — DarkLine Terminal
 
 <p align="center">
-  <img src="app/src/main/res/mipmap-xhdpi/ic_launcher.png" alt="D.L.T Logo" width="120"/>
+  <img src="app/src/main/res/mipmap-xhdpi/ic_launcher.png" alt="D.L.T Logo" width="128"/>
 </p>
 
 <p align="center">
-  <strong>A modern, feature-rich Android terminal emulator</strong><br>
-  Powered by Termux terminal-emulator &amp; terminal-view • Linux distros via proot • Integrated AI assistant
+  <b>Modern Android Terminal Emulator</b><br>
+  Termux-powered core • proot Linux distros • Advanced AI assistant
 </p>
 
 <p align="center">
-  <a href="#features">Features</a> •
-  <a href="#building">Building</a> •
-  <a href="#permissions">Permissions</a> •
-  <a href="#license">License</a>
+  <a href="https://github.com/AlonsoAliaga-dev/DARK-LINE-TERMINAL/actions/workflows/build-apk.yml">
+    <img src="https://github.com/AlonsoAliaga-dev/DARK-LINE-TERMINAL/actions/workflows/build-apk.yml/badge.svg" alt="Build Status"/>
+  </a>
+  <img src="https://img.shields.io/badge/License-MPL--2.0-blue.svg" alt="License: MPL-2.0"/>
+  <img src="https://img.shields.io/badge/Android-8.0%2B-green.svg" alt="Android 8.0+"/>
+  <img src="https://img.shields.io/badge/Java-17-orange.svg" alt="Java 17"/>
 </p>
 
 ---
@@ -22,15 +24,45 @@
 
 | Feature | Description |
 |---------|-------------|
-| **True Terminal Emulator** | Full VT100/xterm emulation using Termux `terminal-emulator` + `terminal-view` |
-| **Multi-Session** | Multiple independent terminal sessions with easy switching |
-| **Linux Distros (proot)** | Install and run full Linux rootfs (Ubuntu, Debian, Alpine…) without root |
-| **AI Assistant** | Built-in chat panel (Groq / OpenAI-compatible) for commands, explanations and debugging |
-| **File Manager** | Browse, open and edit files inside the terminal environment |
-| **Code Editor** | Syntax-highlighted editor based on Sora Editor + TextMate grammars |
-| **Extra Keys** | On-screen ESC, CTRL, ALT, arrows and more |
-| **Dark / Light Themes** | Adaptive Material Design theming |
-| **Foreground Service** | Keep sessions alive in the background |
+| **Full Terminal Emulator** | High-quality VT100/xterm emulation based on Termux `terminal-emulator` + `terminal-view` |
+| **Multi-Session Support** | Create and switch between multiple independent terminal sessions |
+| **Linux Distros (proot)** | Install & run real Linux rootfs (Ubuntu, Debian, Alpine…) **without root** |
+| **AI Assistant** | Powerful side-panel chat with streaming responses |
+| **Custom API Support** | Use any OpenAI-compatible endpoint (Groq by default + full Custom Base URL / API Key / Model) |
+| **Advanced Markdown** | Rich rendering of AI messages with **Markwon** + Table plugin (code blocks, tables, lists…) |
+| **Smart Notification Panel** | Persistent notification with quick actions: **New Session**, **Stop All**, **AI Chat** |
+| **File Manager** | Browse, open, copy, delete and manage files inside the environment |
+| **Code Editor** | Syntax-highlighted editor (Sora Editor + TextMate grammars) |
+| **Extra Keys Bar** | On-screen ESC, CTRL, ALT, Tab, arrows and more |
+| **Material You Design** | Modern light/dark themes |
+| **Foreground Service** | Sessions stay alive in the background |
+| **GitHub Actions CI** | Automatic debug APK builds on every push |
+
+---
+
+## AI Assistant Highlights
+
+- **Default provider**: Groq (very fast)
+- **Custom Endpoint mode**:  
+  Set your own `Base URL` + `API Key` + `Model` (any OpenAI-compatible API)
+- Streaming responses (SSE)
+- Conversation history
+- **Advanced Markdown rendering** on every AI message (tables, fenced code blocks, etc.)
+- System prompt optimized for Linux / terminal help
+
+Go to **Settings → AI Assistant** to configure.
+
+---
+
+## Notification Panel
+
+When sessions are running, a persistent notification appears with three useful actions:
+
+| Action | What it does |
+|--------|--------------|
+| **New Session** | Instantly create a new terminal session |
+| **Stop All** | Terminate all running sessions |
+| **AI Chat** | Jump directly into the AI panel |
 
 ---
 
@@ -39,10 +71,11 @@
 - **Language**: Java 17
 - **UI**: Material Design 3 + ViewBinding
 - **Terminal Core**: Termux `terminal-emulator` & `terminal-view` (Apache-2.0)
-- **Native**: prebuilt `libproot`, `libtermux`, loaders (arm64-v8a, armeabi-v7a, x86, x86_64)
-- **Networking**: OkHttp + SSE for streaming AI responses
+- **Native**: prebuilt `libproot`, `libtermux` + loaders (arm64-v8a, armeabi-v7a, x86, x86_64)
+- **AI / Network**: OkHttp + SSE streaming + OpenAI-compatible API
+- **Markdown**: [Markwon](https://github.com/noties/Markwon) + TablePlugin
 - **Editor**: [Sora Editor](https://github.com/Rosemoe/sora-editor) (LGPL-2.1) + TextMate
-- **Build**: Android Gradle Plugin 8.7+, Gradle 8.13, compileSdk 35
+- **Build**: Android Gradle Plugin 8.13, Gradle 8.13, compileSdk 34
 
 ---
 
@@ -50,40 +83,38 @@
 
 ### Requirements
 
-- Android Studio (recent) or command-line tools
+- Android Studio (recent version) or command-line tools
 - JDK 17
 - Android SDK 34
 
-### Steps
+### Quick Start
 
 ```bash
 git clone https://github.com/AlonsoAliaga-dev/DARK-LINE-TERMINAL.git
 cd DARK-LINE-TERMINAL
-./gradlew wrapper
+
+./gradlew wrapper          # if needed
 ./gradlew :app:assembleDebug
 ```
 
-APK will be at `app/build/outputs/apk/debug/app-debug.apk`.
-
-> The project was originally exported from CodeAssist. Build files have been cleaned and modernized.
+APK will be generated at:
+```
+app/build/outputs/apk/debug/app-debug.apk
+```
 
 ---
 
 ## Permissions
 
-D.L.T requests only the permissions required for reliable terminal operation (aligned with Termux practices for the used components):
-
-| Permission | Reason |
-|------------|--------|
-| `INTERNET` / `ACCESS_NETWORK_STATE` | Download distros, AI chat (Groq API) |
-| `READ/WRITE_EXTERNAL_STORAGE` + `MANAGE_EXTERNAL_STORAGE` | Import rootfs, file manager, bind-mounts |
-| `FOREGROUND_SERVICE` + `FOREGROUND_SERVICE_SPECIAL_USE` | Persistent terminal sessions |
-| `POST_NOTIFICATIONS` | Session notifications |
-| `WAKE_LOCK` | Prevent device sleep during long-running commands |
+| Permission | Purpose |
+|------------|---------|
+| `INTERNET` + `ACCESS_NETWORK_STATE` | Download distros & AI chat |
+| `READ/WRITE_EXTERNAL_STORAGE` + `MANAGE_EXTERNAL_STORAGE` | Rootfs import, file manager, bind-mounts |
+| `FOREGROUND_SERVICE` + `FOREGROUND_SERVICE_SPECIAL_USE` | Keep terminal sessions alive |
+| `POST_NOTIFICATIONS` | Rich notification panel |
+| `WAKE_LOCK` | Prevent sleep during long-running commands |
 | `VIBRATE` | Terminal bell |
-| `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` | **Required for stable operation**. Without exemption Android can kill the process, causing the terminal (and proot sessions) to crash. Users should grant this when prompted. |
-
-No unnecessary permissions are requested.
+| `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` | **Strongly recommended** – prevents Android from killing sessions |
 
 ---
 
@@ -91,40 +122,27 @@ No unnecessary permissions are requested.
 
 ```
 DARK-LINE-TERMINAL/
-├── app/                          # Main application
+├── app/
 │   ├── src/main/
-│   │   ├── java/.../terminal/    # Activities, AI, distro manager, file manager, service
-│   │   ├── jniLibs/              # Prebuilt native libraries
+│   │   ├── java/.../terminal/
+│   │   │   ├── activity/         # Terminal, Settings, File Editor
+│   │   │   ├── ai/               # AI Chat Manager + Panel (Custom API + Markdown)
+│   │   │   ├── service/          # TerminalSessionService + rich notifications
+│   │   │   ├── distro/           # Distro manager & rootfs importer
+│   │   │   ├── filemanager/      # File browser
+│   │   │   ├── settings/         # Settings + Custom AI endpoint
+│   │   │   └── ...
+│   │   ├── jniLibs/              # proot + termux native libs
 │   │   ├── assets/               # Fonts + TextMate grammars
 │   │   └── res/
 │   └── build.gradle.kts
-├── terminal-emulator/            # Termux terminal core (Apache-2.0)
-├── terminal-view/                # Termux rendering view (Apache-2.0)
-├── gradle/
-├── build.gradle.kts
-├── settings.gradle.kts
+├── terminal-emulator/            # Termux core (Apache-2.0)
+├── terminal-view/                # Termux view (Apache-2.0)
+├── .github/workflows/            # CI – automatic APK builds
+├── LICENSE                       # MPL-2.0
+├── NOTICE
 └── README.md
 ```
-
----
-
-## AI Chat
-
-The integrated AI panel uses the **Groq** API (OpenAI-compatible endpoint).
-
-1. Open the AI panel from the terminal.
-2. Configure your API key in **Settings** (stored locally).
-3. Chat naturally — the system prompt is tuned for terminal/Linux help.
-
-Streaming responses are supported via Server-Sent Events (SSE).
-
----
-
-## Distro Management
-
-- Select from registered distros or import a custom rootfs (tar/xz).
-- proot-based isolation — no root required.
-- Bind-mount support for sharing directories with the host.
 
 ---
 
@@ -144,10 +162,11 @@ See the [LICENSE](LICENSE) file for the full text.
 
 | Component | License | Notes |
 |-----------|---------|-------|
-| **terminal-emulator** & **terminal-view** | Apache-2.0 | Explicit exception in Termux. Derived from Jackpal Android Terminal Emulator. Only these modules are used. |
-| **Sora Editor** | LGPL-2.1+ | Dynamic linking. See [Rosemoe/sora-editor](https://github.com/Rosemoe/sora-editor). |
-| **proot** (native libs) | GPL (upstream) | Prebuilt shared libraries. |
-| AndroidX, Material, OkHttp, Gson, etc. | Apache-2.0 | Standard libraries. |
+| **terminal-emulator** & **terminal-view** | Apache-2.0 | Explicit exception in Termux. Only these modules are used. |
+| **Sora Editor** | LGPL-2.1+ | Dynamic linking |
+| **Markwon** | Apache-2.0 | Advanced Markdown rendering |
+| **proot** (native) | GPL (upstream) | Prebuilt shared libraries |
+| AndroidX / Material / OkHttp / Gson … | Apache-2.0 | Standard libraries |
 
 Full attribution is available in the [NOTICE](NOTICE) file.
 
@@ -155,11 +174,12 @@ Full attribution is available in the [NOTICE](NOTICE) file.
 
 ## Acknowledgments
 
-- [Termux](https://github.com/termux/termux-app) — for the excellent `terminal-emulator` and `terminal-view` libraries
-- [Jackpal Android Terminal Emulator](https://github.com/jackpal/Android-Terminal-Emulator) — original source of the terminal core
-- [Sora Editor / Rosemoe](https://github.com/Rosemoe/sora-editor) — powerful code editor
-- [proot](https://github.com/proot-me/proot) / Termux proot — user-space isolation
-- Groq — fast inference for the AI assistant
+- [Termux](https://github.com/termux/termux-app) — `terminal-emulator` & `terminal-view`
+- [Jackpal Android Terminal Emulator](https://github.com/jackpal/Android-Terminal-Emulator)
+- [Sora Editor / Rosemoe](https://github.com/Rosemoe/sora-editor)
+- [Markwon](https://github.com/noties/Markwon)
+- [proot](https://github.com/proot-me/proot) / Termux proot
+- Groq and all OpenAI-compatible providers
 
 ---
 
